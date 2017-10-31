@@ -1,0 +1,106 @@
+1      cipher=input("\n\nEnter cipher text: ")
+2      intron=input("\n\nEnter intron sequence: ")
+3      n=input("\nEnter num. of itereations: ")
+4  
+5      intron1=intron[:4]
+6      intron2=intron[4:]
+7  
+8      print "\nintron1 :" + intron1
+9      print "intron2 :" + intron2
+10 
+11 
+12     print("\nCIPHER TEXT\n")
+13     if len(plai)%2==0:
+14         cipher1=cipher[:len(cipher)/2]
+15         cipher2=cipher[len(cipher)/2:]
+16     else:
+17         cipher1=cipher[:len(cipher)/2 + 1]
+18         cipher2=cipher[len(cipher)/2+1:] + "#"
+19 
+20     print cipher1
+21     print cipher2
+22         
+23 
+24     print("\nDNA\n")
+25     tRNA1=convert_to_tRNA(cipher1)
+26     print tRNA1
+27     tRNA2=convert_to_tTRNA(cipher2)
+28     print tRNA2
+29 
+30 
+31     print("\nmRNA:")
+32     mRNA1 = convert2mRNA(DNA1)
+33     print mRNA1
+34     mRNA2 = convert2mRNA(DNA2)
+35     print mRNA2
+36 
+37 
+38 
+39     print("\nmRNA:")
+40     DNA1 = convert2DNA(tRNA1)
+41     print mRNA1
+42     DNA2 = convert2DNA(tRNA2)
+43     print mRNA2
+44 
+45 
+46         
+47 
+48     for i in range(n):
+49 
+50         print("\n\nIteration : "+str(i))
+51 
+52         binary1 = DNA2Binary(DNA1)
+53         binary2 = DNA2Binary(DNA2)
+54         print "\nbinary sequence1 : "+ binary1
+55         print "binary sequence2 : "+ binary2
+56 
+57 
+58         DNA1=XNOR_and_convert2DNA(binary1,intron1)
+59         DNA2=XNOR_and_convert2DNA(binary2,intron2)
+60 
+61 
+62         print("\nL-Shift:")
+63         DNA1 = leftShift(DNA1)
+64         print DNA1
+65         DNA2 = leftShift(DNA2)
+66         print DNA2
+67 
+68         
+69         print("\nmRNA:")
+70         mRNA1 = convert2mRNA(DNA1)
+71         print mRNA1
+72         mRNA2 = convert2mRNA(DNA2)
+73         print mRNA2
+74 
+75         print("\ntRNA:")
+76         tRNA1 = complement_tRNA(mRNA1)
+77         print tRNA1
+78         tRNA2 = complement_tRNA(mRNA2)
+79         print tRNA2
+80 
+81         print("\nDNA:")
+82         DNA1 = convert2DNA(tRNA1)
+83         print DNA1
+84         DNA2 = convert2DNA(tRNA2)
+85         print DNA2
+86 
+87 
+88 
+89 
+90     _PT=DNA1+DNA2
+91     _PT=convert2mRNA(_PT)
+92     _PT=complement_tRNA(_PT)
+93 
+94 
+95     print ("\n\nIntermediate result : " + (_PT))
+96 
+97     PT=""
+98 
+99     for i in range(len(_PT)/4):
+100        PT+=char_map[_PT[i*4:i*4+4]]
+101
+102
+103    print ("\n\nPLAIN TEXT : " + PT)
+104
+105
+106

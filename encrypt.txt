@@ -1,0 +1,254 @@
+1      f=open('protein.txt','r')
+2  
+3      protein_map=dict()
+4      i=0
+5      for line in f:
+6          if i%2==0 :
+7             tRNA=line.strip()
+8          else:
+9              protein=line[2:].strip()
+10             print tRNA+" "+protein
+11             protein_map[tRNA]=protein
+12         i+=1
+13 
+14     f.close()
+15 
+16 
+17     f=open('ascii.txt','r')
+18     char_map=dict()
+19 
+20     for line in f:
+21         line=line.strip().split('\t')
+22         char_map[line[0]]=line[1]
+23         print line[0]+"\t"+line[1]
+24 
+25     f.close()
+26 
+27 
+28     def complement(DNA):
+29         _DNA=""
+30         for char in DNA:
+31             if char == 'A':
+32                 _DNA+='T'
+33             elif char == 'T':
+34                 _DNA+='A'
+35             elif char == 'C':
+36                 _DNA+='G'
+37             elif char == 'G':
+38                 _DNA+='C'
+39 
+40         return _DNA
+41 
+42 
+43     def complement_tRNA(tRNA):
+44         mRNA=""
+45         for char in tRNA:
+46             if char == 'A':
+47                 mRNA+='U'
+48             elif char == 'U':
+49                 mRNA+='A'
+50             elif char == 'C':
+51                 mRNA+='G'
+52             elif char == 'G':
+53                 mRNA+='C'
+54 
+55         return mRNA
+56 
+57 
+58     def translate(seq):
+59          
+60         table = {
+61             'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
+62             'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
+63             'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
+64             'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',                 
+65             'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L',
+66             'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P',
+67             'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q',
+68             'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
+69             'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V',
+70             'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
+71             'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E',
+72             'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
+73             'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
+74             'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
+75             'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
+76             'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
+77         }
+78 
+79 
+80     def DNA2Binary(DNA):
+81         binary=""
+82         for ch in DNA:
+83             if ch=='A':
+84                 binary+="00"
+85             elif ch=='T':
+86                 binary+="01"
+87             elif ch=="C":
+88                 binary+="10"
+89             else:
+90                 binary+="11"
+91 
+92         return binary
+93             
+94     ##def convert(plain):
+95     ##
+96     ##    dict1={'B':'AAGG','A':'ACAT','N':'GCTT','K':'GAGG'}
+97     ##    
+98     ##    DNA=""
+99     ##
+100    ##    for char in plain:
+101    ##        DNA+=dict1[char]
+102    ##
+103    ##    return DNA
+104            
+105
+106    def convert(plain):
+107        DNA=""
+108        for ch in plain:
+109            DNA+=char_map[ch]
+110
+111        return DNA
+112
+113
+114    def convert2mRNA(DNA):
+115        _mRNA=DNA.replace("T","U")
+116        return _mRNA
+117       
+118
+119    def convert2DNA(mRNA):
+120        DNA=mRNA.replace("U","T")
+121        return DNA
+122       
+123
+124
+125    def rightShift(DNA):
+126        return DNA[-1:] + DNA[:-1]   
+127
+128
+129    def XNOR_and_convert2DNA(binary,intron):
+130        dict1={'00':'A', '01':'T', '10':'C', '11':'G'}
+131
+132        _intron=""
+133        for i in range(len(binary)/4):
+134            _intron+=intron
+135
+136        print binary
+137        print _intron
+138
+139        xnor=""
+140        
+141        for i in range(len(binary)):
+142            if binary[i]==_intron[i] :
+143                xnor+="1"
+144            else:
+145                xnor+="0"
+146
+147        print xnor
+148
+149        DNA=""
+150        
+151        for i in range(len(xnor)/2):
+152            DNA+=dict1[xnor[i*2:i*2+2]]
+153
+154        print DNA
+155        return DNA
+156        
+157
+158		plain=input("\n\nEnter plain text: ")
+159    intron=input("\n\nEnter intron sequence: ")
+160    n=input("\nEnter num. of itereations: ")
+161
+162    intron1=intron[:4]
+163    intron2=intron[4:]
+164
+165    print "\nintron1 :" + intron1
+166    print "intron2 :" + intron2
+167
+168
+169    print("\nPLAIN TEXT\n")
+170    if len(plain)%2==0:
+171        plain1=plain[:len(plain)/2]
+172        plain2=plain[len(plain)/2:]
+173    else:
+174        plain1=plain[:len(plain)/2 + 1]
+175        plain2=plain[len(plain)/2+1:] + "#"
+176
+177    print plain1
+178    print plain2
+179        
+180
+181    print("\nDNA\n")
+182    DNA1=convert(plain1)
+183    print DNA1
+184    DNA2=convert(plain2)
+185    print DNA2
+186
+187    ##print("\n_DNA\n")
+188    ##_DNA1 =complement(DNA1)
+189    ##print _DNA1
+190    ##_DNA2 =complement(DNA2)
+191    ##print _DNA2
+192
+193
+194    binary1 = DNA2Binary(DNA1)
+195    binary2 = DNA2Binary(DNA2)
+196    print "\nbinary sequence1 : "+ binary1
+197    print "binary sequence2 : "+ binary2
+198
+199
+200    DNA1=XNOR_and_convert2DNA(binary1,intron1)
+201    DNA2=XNOR_and_convert2DNA(binary2,intron2)
+202
+203
+204    for i in range(n):
+205
+206        print("\n\nIteration : "+str(i))
+207
+208        print("\nmRNA:")
+209        mRNA1 = convert2mRNA(DNA1)
+210        print mRNA1
+211        mRNA2 = convert2mRNA(DNA2)
+212        print mRNA2
+213
+214        print("\ntRNA:")
+215        tRNA1 = complement_tRNA(mRNA1)
+216        print tRNA1
+217        tRNA2 = complement_tRNA(mRNA2)
+218        print tRNA2
+219
+220
+221        print("\nDNA:")
+222        DNA1 = convert2DNA(tRNA1)
+223        print DNA1
+224        DNA2 = convert2DNA(tRNA2)
+225        print DNA2
+226
+227
+228        print("\nR-Shift:")
+229        DNA1 = rightShift(DNA1)
+230        print DNA1
+231        DNA2 = rightShift(DNA2)
+232        print DNA2
+233
+234
+235    _CT=DNA1+DNA2
+236    _CT=convert2mRNA(_CT)
+237    _CT=complement_tRNA(_CT)
+238
+239
+240    print ("\n\nIntermediate result : " + (_CT))
+241
+242
+243    CT=""
+244
+245    for i in range(len(_CT)/4):
+246        #print _CT[i*4:i*4+4]
+247        #print protein_map[_CT[i*4:i*4+4]]
+248        CT+=protein_map[_CT[i*4:i*4+4]]
+249
+250
+251    print ("\n\nCIPHER TEXT : " + CT)
+252
+253
+254
